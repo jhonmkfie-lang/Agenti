@@ -1,1 +1,4 @@
-{ "crons": [{ "path": "/api/scout", "schedule": "0 8 * * *" }] }
+{
+  "crons": [{ "path": "/api/scout", "schedule": "0 8 * * *" }],
+  "functions": { "api/scout.js": { "maxDuration": 60 } }
+}

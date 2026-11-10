@@ -15,5 +15,15 @@ module.exports = async (req, res) => {
       views: x.statistics.viewCount,
       link: "https://youtube.com/watch?v=" + x.id
     }));
+  const testo = top.length
+    ? "🔥 Video virali ultime 24h:\n\n" + top.slice(0, 10).map((x, i) =>
+        `${i+1}. ${x.titolo}\n${x.canale} - ${Number(x.views).toLocaleString("it-IT")} views\n${x.link}`
+      ).join("\n\n")
+    : "Oggi nessun video sopra 1 milione.";
+  await fetch(`https://api.telegram.org/bot${process.env.TG_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chat_id: process.env.TG_CHAT, text: testo, disable_web_page_preview: true })
+  });
   res.status(200).json(top);
 };

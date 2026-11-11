@@ -53,41 +53,4 @@ def durata(f):
         ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", f]).decode().strip())
 
 def main():
-    elenco = trend()
-    d = idea("\n".join(elenco) or "- nessun dato")
-    urls = clips(d["parole_chiave"]) or clips("nature")
-    segs = []
-    for i, frase in enumerate(d["frasi"]):
-        mp3 = f"a{i}.mp3"
-        asyncio.run(edge_tts.Communicate(frase, "it-IT-IsabellaNeural").save(mp3))
-        dur = durata(mp3) + 0.4
-        clip = f"c{i}.mp4"
-        open(clip, "wb").write(requests.get(urls[i % len(urls)], timeout=120).content)
-        open(f"t{i}.txt", "w", encoding="utf-8").write(textwrap.fill(frase, 24))
-        vf = (f"scale=-2:1920,crop=1080:1920,drawtext=fontfile={FONT}:textfile=t{i}.txt:"
-              "fontsize=64:fontcolor=white:borderw=6:bordercolor=black:line_spacing=12:"
-              "x=(w-text_w)/2:y=h*0.62")
-        subprocess.run(["ffmpeg", "-y", "-stream_loop", "-1", "-i", clip, "-i", mp3,
-                        "-t", str(dur), "-vf", vf, "-af", "apad", "-map", "0:v", "-map", "1:a",
-                        "-c:v", "libx264", "-preset", "veryfast", "-crf", "28",
-                        "-pix_fmt", "yuv420p", "-r", "30", "-c:a", "aac", f"s{i}.mp4"],
-                       check=True, capture_output=True)
-        segs.append(f"s{i}.mp4")
-    open("list.txt", "w").write("".join(f"file '{s}'\n" for s in segs))
-    subprocess.run(["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", "list.txt",
-                    "-c", "copy", "final.mp4"], check=True, capture_output=True)
-    with open("final.mp4", "rb") as f:
-        requests.post(f"https://api.telegram.org/bot{E['TG_TOKEN']}/sendVideo",
-                      data={"chat_id": E["TG_CHAT"],
-                            "caption": (d["titolo"] + "\n\n" + d["descrizione"])[:1000]},
-                      files={"video": f}, timeout=300)
-
-if __name__ == "__main__":
-    try:
-        main()
-    except Exception as e:
-        extra = ""
-        if isinstance(e, subprocess.CalledProcessError) and e.stderr:
-            extra = e.stderr.decode(errors="ignore")[-600:]
-        tg("Errore video: " + str(e)[:500] + "\n" + extra)
-        raise
+    elenco = trend

@@ -37,7 +37,7 @@ module.exports = async (req, res) => {
     const elenco = top.slice(0, 10).map(x => `- ${x.titolo} (${x.canale}, ${x.views} views)`).join("\n");
     const prompt = `Sei un esperto di contenuti virali. Ecco i video più virali delle ultime 24 ore su YouTube:\n${elenco}\n\nRispondi in italiano, in modo semplice e breve.\n1) Spiega in 3 punti cosa hanno in comune e perché funzionano.\n2) Dai 3 idee di video ORIGINALI ispirate a questi trend (non copiare nessun video). Per ognuna: titolo, frase di apertura dei primi 3 secondi e copione di circa 30 secondi.`;
     try {
-      const g = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_KEY}`, {
+      const g = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${process.env.GEMINI_KEY}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })

@@ -1,0 +1,23 @@
+name: Crea video
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 8 * * *"
+jobs:
+  video:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install edge-tts requests
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
+      - run: python video.py
+        env:
+          YT_KEY: ${{ secrets.YT_KEY }}
+          GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
+          PIXABAY_KEY: ${{ secrets.PIXABAY_KEY }}
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT: ${{ secrets.TG_CHAT }}

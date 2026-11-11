@@ -6,7 +6,7 @@ on:
 jobs:
   video:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -21,3 +21,4 @@ jobs:
           PIXABAY_KEY: ${{ secrets.PIXABAY_KEY }}
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
           TG_CHAT: ${{ secrets.TG_CHAT }}
+          ELEVEN_KEY: ${{ secrets.ELEVEN_KEY }}
